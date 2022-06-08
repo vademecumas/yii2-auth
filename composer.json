@@ -1,5 +1,5 @@
 {
-  "name": "vademecumas/auth",
+  "name": "vademecumas/yii2-auth",
   "description": "Auth extension for yii2 projects",
   "autoload": {
     "psr-4": {
