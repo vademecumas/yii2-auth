@@ -57,9 +57,11 @@ class AccountController extends Controller
                 if ($loginResponse) {
 
                     $user = User::findOne(['id' => $loginResponse->user->id]);
-                    if ($this->authModule->shouldVerifyEmail && $user->status == User::STATUS_INACTIVE) {
+                    if ($this->authModule->shouldVerifyEmail && $user != null && $user->status == User::STATUS_INACTIVE) {
                         \Yii::$app->getSession()->setFlash('error', \Yii::t('auth', 'Please check the account verification e-mail sent to your e-mail address.'));
-                    } else if ($user = $this->saveUser($loginResponse, $user)) {
+                    }
+
+                    if ($user = $this->saveUser($loginResponse, $user, false)) {
 
                         $this->authComponent->authToken = $user->auth_key;
                         $userInfo = $this->authComponent->profile();
@@ -179,7 +181,7 @@ class AccountController extends Controller
                 return $this->redirect("/auth/account/register");
             }
 
-            if ($user = $this->saveUser($loginResponse)) {
+            if ($user = $this->saveUser($loginResponse, null, true)) {
 
                 $this->authComponent->authToken = $user->auth_key;
                 $userInfo = $this->authComponent->profile();
@@ -405,15 +407,21 @@ class AccountController extends Controller
         $user->save();
     }
 
-    public function saveUser($response, $user = null)
+    public function saveUser($response, $user = null, $isRegisterAction)
     {
         if (!$response) {
             return false;
         }
 
         if (!$user) {
+
+            $status = User::STATUS_ACTIVE;
+            if ($isRegisterAction && $this->authModule->shouldVerifyEmail) {
+                $status = User::STATUS_INACTIVE;
+            }
+
             $user = new User();
-            $user->status = $this->authModule->shouldVerifyEmail ? User::STATUS_INACTIVE : User::STATUS_ACTIVE;
+            $user->status = $status;
 
         }
 
