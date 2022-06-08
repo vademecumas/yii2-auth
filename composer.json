@@ -1,0 +1,16 @@
+{
+  "name": "vademecumas/auth",
+  "description": "Auth extension for yii2 projects",
+  "autoload": {
+    "psr-4": {
+      "vademecumas\\auth\\": "src"
+    }
+  },
+  "authors": [
+    {
+      "name": "dev",
+      "email": "dev@vademecumonline.com.tr"
+    }
+  ],
+  "require": {}
+}
