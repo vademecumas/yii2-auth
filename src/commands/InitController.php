@@ -28,5 +28,8 @@ class InitController extends Controller
         //copy view files
         Dir::copy(__DIR__ . "/../views", $appDir . "/views/auth");
 
+        //copy migration files
+        Dir::copy(__DIR__ . "/../migrations", Yii::getAlias("@app") . "/migrations");
+
     }
 }

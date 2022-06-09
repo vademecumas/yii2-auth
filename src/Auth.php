@@ -15,6 +15,7 @@ class Auth extends \yii\base\Module implements BootstrapInterface
     public $enableRegister = false;
     public $shouldVerifyEmail = false;
     public $dataSource = self::DATA_SOURCE_DB;
+    public $dbSchema;
 
     const  DATA_SOURCE_API = 'api';
     const  DATA_SOURCE_DB = 'db';
