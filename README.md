@@ -90,17 +90,21 @@ composer require vademecumas/yii2-auth
 run `php yii auth/init {root directory of web project}`  to publish views, messages, configs and email files to app's
 root directory
 
-5. Update .gitignore
+5. Up Migrations
+
+run `php yii migrate`
+
+6. Update .gitignore
 
 add following file to `{root directory of web project}/config/.gitignore`
 
 `auth-local.php`
 
-5. Update Api Credentials
+7. Update Api Credentials
 
 you should change api credentials at `{root directory of web project}/config/auth.php` like appToken ,appId etc.
 
-6. Visit Login Page
+8. Visit Login Page
 
 You can access login page at `{project url}/auth/account/login`
 
