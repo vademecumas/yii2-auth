@@ -63,6 +63,8 @@ composer require vademecumas/yii2-auth
             '/auth/account/password-reset',
             '/auth/account/resend-verification-email',
             '/auth/account/verify-email',
+            '/auth/account/agreement',
+            '/auth/account/profile',
         ],
     ],
 

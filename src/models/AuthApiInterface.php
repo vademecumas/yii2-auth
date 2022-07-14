@@ -9,9 +9,9 @@ interface AuthApiInterface
 
     public function signup($userData);
 
-    public function update($userData);
+    public function updateProfile($userData);
 
-    public function profile();
+    public function getProfile();
 
     public function confirmEmail($token);
 
@@ -24,8 +24,6 @@ interface AuthApiInterface
     public function requestPasswordReset($userData);
 
     public function resetPassword($userData);
-
-    public function getDetail($id);
 
     public function getFormDropdowns();
 

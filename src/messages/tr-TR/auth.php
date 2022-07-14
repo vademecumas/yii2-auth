@@ -46,4 +46,6 @@ return [
     'Email Address Verification' => 'E-posta Adresi Doğrulama',
     'Agreement' => 'Sözleşme',
     'Sample Agreement Text' => 'Örnek Sözleşme Metni',
+    'Profile Details' => 'Profil Bilgileri',
+    'Your profile details has been updated successfully' => 'Profil bilgileriniz başarıyla güncellendi'
 ];

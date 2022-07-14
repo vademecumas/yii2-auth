@@ -64,7 +64,7 @@ class AccountController extends Controller
                     if ($user = $this->saveUser($loginResponse, $user, false)) {
 
                         $this->authComponent->authToken = $user->auth_key;
-                        $userInfo = $this->authComponent->profile();
+                        $userInfo = $this->authComponent->getProfile();
 
                         if ($userInfo) {
 
@@ -122,11 +122,6 @@ class AccountController extends Controller
         if (Yii::$app->request->isPost) {
 
             $model->load(Yii::$app->request->post());
-            $model->email = mb_strtolower($model->email, 'utf8');
-            $model->birthday = strtotime($model->birthday);
-            if ($model->occupation != 1 && $model->occupation != 2) {
-                $model->areaofspecialization = '';
-            }
             $createUserData = [
                 "firstName" => $model->firstName,
                 "lastName" => $model->lastName,
@@ -135,7 +130,6 @@ class AccountController extends Controller
                 "cityId" => (isset($model->city) && !empty($model->city)) ? $model->city : null,
                 "districtId" => (isset($model->district) && !empty($model->district)) ? $model->district : null,
                 "address" => (isset($model->address) && !empty($model->address)) ? $model->address : null,
-                "pharmacyDiscountRate" => (isset($model->pharmacydiscountrate) && !empty($model->pharmacydiscountrate)) ? $model->pharmacydiscountrate : null,
                 "tcNo" => (isset($model->tcNo) && !empty($model->tcNo)) ? $model->tcNo : null,
                 "dateOfBirth" => (isset($model->birthday) && !empty($model->birthday)) ? $model->birthday : null,
                 "billingAddress" => (isset($model->billingAddress) && !empty($model->billingAddress)) ? $model->billingAddress : null,
@@ -184,7 +178,7 @@ class AccountController extends Controller
             if ($user = $this->saveUser($loginResponse, null, true)) {
 
                 $this->authComponent->authToken = $user->auth_key;
-                $userInfo = $this->authComponent->profile();
+                $userInfo = $this->authComponent->getProfile();
 
                 if ($userInfo) {
 
@@ -369,6 +363,55 @@ class AccountController extends Controller
         return $this->render('resend-verification-email', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * Profile page
+     * @return mixed
+     */
+    public function actionProfile()
+    {
+        $model = new UserForm();
+        $model->setScenario(UserForm::SCENARIO_ACCOUNT_INFO);
+        $userInfo = $this->authComponent->getProfile();
+
+        $model = $this->authComponent->setUserAttributes($model, $userInfo);
+
+
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
+
+            if ($model->validate()) {
+
+                $userData = [
+                    "user" => $this->authComponent->generateUserData($model)
+                ];
+
+                if ($this->authComponent->updateProfile($userData)) {
+                    Yii::$app->session->setFlash("success", \Yii::t('auth', 'Your profile details has been updated successfully'));
+                    return $this->redirect("/auth/account/profile");
+                } else {
+                    if (!empty($this->authComponent->errors)) {
+                        if (!empty($this->authComponent->errors->form_errors)) {
+                            $arr = [];
+                            foreach ($this->authComponent->errors->form_errors as $formError) {
+                                $arr[] = $formError[0];
+                            }
+                            \Yii::$app->getSession()->setFlash('error', implode(" ", $arr));
+                        }
+                    }
+
+                }
+            } else {
+                \Yii::$app->getSession()->setFlash('error', implode(" ", $model->errors));
+            }
+        }
+
+
+        return $this->render('profile', [
+            'model' => $model,
+            'formDropdowns' => $this->authComponent->getFormDropdowns()
+        ]);
+
     }
 
     /**

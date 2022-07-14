@@ -41,12 +41,12 @@ class AuthApi extends Component implements AuthApiInterface
         return $this->send("/user/create", "post", $userData);
     }
 
-    public function update($userData)
+    public function updateProfile($userData)
     {
         return $this->send("/user/update", "post", $userData);
     }
 
-    public function profile()
+    public function getProfile()
     {
         return $this->send("/user/get");
     }
@@ -82,10 +82,6 @@ class AuthApi extends Component implements AuthApiInterface
         return $this->send("/user/reset-password", "post", $userData);
     }
 
-    public function getDetail($id)
-    {
-        return $this->send("/interaction-list/get?id=" . $id, "get");
-    }
 
     public function getFormDropdowns()
     {
@@ -105,5 +101,69 @@ class AuthApi extends Component implements AuthApiInterface
         }
         return $headers;
     }
+
+    public function setUserAttributes($model, $userData)
+    {
+        if ($userData) {
+            $model->email = $userData->user->email;
+            $model = $this->setUserDataAttributes($model, $userData);
+        }
+
+        return $model;
+    }
+
+    public function setUserDataAttributes($model, $userData)
+    {
+        if ($userData) {
+            $model->firstName = $userData->user->userData->firstName;
+            $model->lastName = $userData->user->userData->lastName;
+            $model->occupation = $userData->user->userData->occupation->id;
+            $model->tcNo = !empty($userData->user->userData->tcNo) ? $userData->user->userData->tcNo : null;
+            $model->birthday = !empty($userData->user->userData->dateOfBirth) ? $userData->user->userData->dateOfBirth : null;
+            $model->address = !empty($userData->user->userData->address) ? $userData->user->userData->address : null;
+            $model->city = !empty($userData->user->userData->city) ? $userData->user->userData->city->id : null;
+            $model->district = !empty($userData->user->userData->district) ? $userData->user->userData->district->id : null;
+            $model->billingAddress = !empty($userData->user->userData->billingAddress) ? $userData->user->userData->billingAddress : null;
+            $model->billingCity = !empty($userData->user->userData->billingCity) ? $userData->user->userData->billingCity->id : null;
+            $model->billingDistrict = !empty($userData->user->userData->billingDistrict) ? $userData->user->userData->billingDistrict->id : null;
+            $model->phone = !empty($userData->user->userData->phone) ? $userData->user->userData->phone : null;
+            $model->companyName = !empty($userData->user->userData->companyName) ? $userData->user->userData->companyName : null;
+            $model->taxNo = !empty($userData->user->userData->taxNo) ? $userData->user->userData->taxNo : null;
+            $model->taxOffice = !empty($userData->user->userData->taxOffice) ? $userData->user->userData->taxOffice : null;
+            $model->areaofspecialization = !empty($userData->user->userData->areaOfSpecialization) ? $userData->user->userData->areaOfSpecialization->id : null;
+
+        }
+
+        return $model;
+    }
+
+
+    public function generateUserData($model)
+    {
+        $userData = [
+            "firstName" => $model->firstName,
+            "lastName" => $model->lastName,
+            "occupationId" => (isset($model->occupation) && !empty($model->occupation)) ? $model->occupation : null,
+            "areaOfSpecializationId" => (isset($model->areaofspecialization) && !empty($model->areaofspecialization)) ? $model->areaofspecialization : null,
+            "cityId" => (isset($model->city) && !empty($model->city)) ? $model->city : null,
+            "districtId" => (isset($model->district) && !empty($model->district)) ? $model->district : null,
+            "address" => (isset($model->address) && !empty($model->address)) ? $model->address : null,
+            "pharmacyDiscountRate" => (isset($model->pharmacydiscountrate) && !empty($model->pharmacydiscountrate)) ? $model->pharmacydiscountrate : null,
+            "tcNo" => (isset($model->tcNo) && !empty($model->tcNo)) ? $model->tcNo : null,
+            "dateOfBirth" => (isset($model->birthday) && !empty($model->birthday)) ? $model->birthday : null,
+            "billingAddress" => (isset($model->billingAddress) && !empty($model->billingAddress)) ? $model->billingAddress : null,
+            "billingCityId" => (isset($model->billingCity) && !empty($model->billingCity)) ? $model->billingCity : null,
+            "billingDistrictId" => (isset($model->billingDistrict) && !empty($model->billingDistrict)) ? $model->billingDistrict : null,
+            "companyName" => (isset($model->companyName) && !empty($model->companyName)) ? $model->companyName : null,
+            "taxNo" => (isset($model->taxNo) && !empty($model->taxNo)) ? $model->taxNo : null,
+            "taxOffice" => (isset($model->taxOffice) && !empty($model->taxOffice)) ? $model->taxOffice : null,
+            "phone" => (isset($model->phone) && !empty($model->phone)) ? $model->phone : null,
+            'identifier' => (isset($model->gln) && !empty($model->gln)) ? $model->gln : null,
+            'branch' => (isset($model->warehouse_branch) && !empty($model->warehouse_branch)) ? $model->warehouse_branch : null,
+        ];
+
+        return $userData;
+    }
+
 
 }
