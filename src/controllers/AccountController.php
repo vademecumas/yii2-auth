@@ -371,6 +371,11 @@ class AccountController extends Controller
      */
     public function actionProfile()
     {
+
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect("/auth/account/login");
+        }
+
         $model = new UserForm();
         $model->setScenario(UserForm::SCENARIO_ACCOUNT_INFO);
         $userInfo = $this->authComponent->getProfile();
