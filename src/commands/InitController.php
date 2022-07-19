@@ -14,7 +14,7 @@ class InitController extends Controller
     {
         $appDir = Yii::getAlias($appDirectory);
 
-        if (Yii::$app->getModule('auth')->dataSource == Auth::DATA_SOURCE_API) {
+        if (Yii::$app->getModule('auth')->dataSource == Auth::DATA_SOURCE_API && !file_exists($appDir . "/config/auth-local.php")) {
             //copy config files
             Dir::copy(__DIR__ . "/../config", $appDir . "/config");
         }
