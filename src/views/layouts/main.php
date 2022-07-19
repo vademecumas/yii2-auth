@@ -27,6 +27,11 @@ foreach ($notificationTypes as $notificationType) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?php $this->registerCsrfMetaTags() ?>
         <?php $this->head() ?>
+        <style>
+            .login-box {
+                width: auto;
+            }
+        </style>
     </head>
     <body class="hold-transition login-page">
     <?php $this->beginBody() ?>

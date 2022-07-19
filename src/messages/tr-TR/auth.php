@@ -47,5 +47,24 @@ return [
     'Agreement' => 'Sözleşme',
     'Sample Agreement Text' => 'Örnek Sözleşme Metni',
     'Profile Details' => 'Profil Bilgileri',
-    'Your profile details has been updated successfully' => 'Profil bilgileriniz başarıyla güncellendi'
+    'Your profile details has been updated successfully' => 'Profil bilgileriniz başarıyla güncellendi',
+    'Your subscription has expired or not started. Please enter the ones sent to your e-mail address.' => 'Aboneliğinizin süresi bitmiş ya da başlatılmamıştır. Lütfen mail adresinize gönderilen abonelik anahtarını girin.',
+    'Activation Code' => 'Aktivasyon Kod',
+    'Your Key Group' => 'Anahtar Grubunuz',
+    'Subscription End Date' => 'Abonelik Bitiş Tarihi',
+    'Fill the form now,<br/> start using it!' => 'Hemen formu doldurun,<br/> kullanmaya başlayın!',
+    'Subscription Type' => 'Abonelik Türü',
+    'Number of Subscriptions' => 'Abonelik Adedi',
+    '1 Year Subscription' => '1 Yıl Süreli Abonelik',
+    '6 Months Subscription' => '6 Ay Süreli Abonelik',
+    'Purchase' => 'Satın Al',
+    'Go Back' => 'Geri Dön',
+    'Your order could not be received' => 'Siparişiniz alınamamıştır',
+    'Sorry' => 'Üzgünüz',
+    'Go Back Activation Page' => 'Aktivasyon Ekranına Geri Dön',
+    'Order Number' => 'Sipariş Numarası',
+    'Your order has been received, you can check your email box to get activation code' => 'Siparişiniz alındı, aktivasyon kodunu almak için e-posta kutunuzu kontrol edebilirsiniz.',
+    'Thanks' => 'Teşekkür Ederiz!',
+    'Registration key not found or matched!' => 'Kayıt anahtarı bulunamadı yada eşleştirilemedi!'
+
 ];

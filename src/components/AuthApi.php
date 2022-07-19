@@ -11,6 +11,7 @@ class AuthApi extends Component implements AuthApiInterface
 {
     public $appToken;
     public $appIds;
+    public $packageList;
     public $apiUrl;
     public $headers;
     public $errors;
@@ -18,6 +19,9 @@ class AuthApi extends Component implements AuthApiInterface
 
     const AUTH_HEADER = "VDMC-USER-AUTH-TOKEN";
     const TOKEN_HEADER = "VDMC-APP-TOKEN";
+    const CH_MODE_LOGIN_ONLY = 1;
+    const CH_MODE_ALLOW_ALL = 2;
+    const CH_MODE_GUEST_ONLY = 3;
 
     public function init()
     {
@@ -66,6 +70,43 @@ class AuthApi extends Component implements AuthApiInterface
     {
         return $this->send("/user/account-status");
     }
+
+    public function activateUser($key)
+    {
+        return $this->send("/user/activate", "post", [
+            "activation_code" => $key
+        ]);
+    }
+
+    public function createOrder($packageId, $amount, $appIds, $guestFirstName = null, $guestLastName = null, $guestEmail = null, $guestPhone = null, $checkoutMode = self::CH_MODE_LOGIN_ONLY, $profileHash = null)
+    {
+        return $this->send("/order/create", "post", [
+            "package" => $packageId,
+            "amount" => $amount,
+            "appIds" => $appIds,
+            "guestFirstName" => $guestFirstName,
+            "guestLastName" => $guestLastName,
+            "guestEmail" => $guestEmail,
+            "guestPhone" => $guestPhone,
+            "checkoutMode" => $checkoutMode,
+            "profileHash" => $profileHash,
+
+        ]);
+    }
+
+    public function getOrder($orderHash)
+    {
+        return $this->send("/order/get?identifier_hash=" . $orderHash);
+    }
+
+    public function generateMassKey($packageId, $amount)
+    {
+        return $this->send("/package/mass-generate", "post", [
+            "packageId" => $packageId,
+            "amount" => $amount
+        ]);
+    }
+
 
     public function updatePassword($userData)
     {

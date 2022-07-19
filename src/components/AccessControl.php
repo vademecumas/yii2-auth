@@ -9,7 +9,14 @@ use yii\helpers\Url;
 class AccessControl extends \yii\base\ActionFilter
 {
     public $allowedUrls = [];
+    public $subscriptionExcludedUrls = [
+        '/auth/landing/subscribe',
+        '/auth/landing/checkout-result',
+        '/auth/landing/checkout-success'
+
+    ];
     public $forceLogin = false;
+    public $shouldSubscribe = false;
     const REGISTER_URL = '/auth/account/register';
 
     public function beforeAction($action)
@@ -31,7 +38,6 @@ class AccessControl extends \yii\base\ActionFilter
 
         } else {
 
-            //TODO: fix here
             //check is logged in from another device or is account expired
             $authComponent = Yii::$app->getModule('auth')->authApi;
             $userStatus = $authComponent->accountStatus();
@@ -41,6 +47,13 @@ class AccessControl extends \yii\base\ActionFilter
                 return false;
             }
 
+
+            if ($this->shouldSubscribe) {
+                if (((empty($userStatus->key) || $userStatus->key->endsAt < time())) && !in_array($urlParts['path'], $this->subscriptionExcludedUrls)) {
+//                    Yii::$app->getResponse()->redirect(Url::to(['/auth/landing/activate-key']));
+//                    return false;
+                }
+            }
         }
 
 

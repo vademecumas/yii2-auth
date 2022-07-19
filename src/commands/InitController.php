@@ -31,5 +31,7 @@ class InitController extends Controller
         //copy migration files
         Dir::copy(__DIR__ . "/../migrations", Yii::getAlias("@app") . "/migrations");
 
+        //copy web assets (images,css,js.. etc)
+        Dir::copy(__DIR__ . "/../web", $appDir . "/web");
     }
 }
