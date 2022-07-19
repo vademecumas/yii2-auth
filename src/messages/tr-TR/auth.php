@@ -65,6 +65,7 @@ return [
     'Order Number' => 'Sipariş Numarası',
     'Your order has been received, you can check your email box to get activation code' => 'Siparişiniz alındı, aktivasyon kodunu almak için e-posta kutunuzu kontrol edebilirsiniz.',
     'Thanks' => 'Teşekkür Ederiz!',
-    'Registration key not found or matched!' => 'Kayıt anahtarı bulunamadı yada eşleştirilemedi!'
+    'Registration key not found or matched!' => 'Kayıt anahtarı bulunamadı yada eşleştirilemedi!',
+    'Activation completed successfully' => 'Aktivasyon işlemi başarıyla gerçekleşti'
 
 ];

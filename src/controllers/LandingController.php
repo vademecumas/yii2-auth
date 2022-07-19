@@ -54,9 +54,9 @@ class LandingController extends Controller
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $user = Yii::$app->getUser()->getIdentity();
                 $activation = $this->authComponent->activateUser($model->key);
                 if ($activation) {
+                    Yii::$app->session->setFlash("success", \Yii::t('auth', 'Activation completed successfully'));
                     return $this->redirect("/");
 
                 } else {
