@@ -8,5 +8,13 @@ return [
             'appToken' => '',
             'appIds' => ''
         ],
+        'agreementApi' => [
+            'class' => 'common\components\AgreementApi',
+            'url' => '',
+            'appId' => null,
+            'partnerId' => null,
+            'username' => '',
+            'password' => '',
+        ],
     ],
 ];

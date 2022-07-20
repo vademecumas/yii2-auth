@@ -15,6 +15,7 @@ use yii\web\Response;
 class AccountController extends Controller
 {
     protected $authComponent;
+    protected $agreementComponent;
     protected $authModule;
     protected $appDir;
 
@@ -26,6 +27,7 @@ class AccountController extends Controller
         $this->layout = 'main';
         $this->authModule = Yii::$app->getModule('auth');
         $this->authComponent = $this->authModule->authApi;
+        $this->agreementComponent = $this->authModule->agreementApi;
         $this->appDir = Yii::getAlias('@app');
 
 
@@ -181,6 +183,16 @@ class AccountController extends Controller
                 $userInfo = $this->authComponent->getProfile();
 
                 if ($userInfo) {
+
+                    //agreement component
+                    if ($this->authModule->enableAgreement) {
+                        //get active agreement
+                        $aggrement = $this->agreementComponent->activeAgreement();
+
+                        //approve agreement
+                        $ip = Yii::$app->request->getUserIP();
+                        $this->agreementComponent->approve($aggrement['id'], $user->id, $ip, 1);
+                    }
 
                     //send verification email
                     if ($this->authModule->shouldVerifyEmail) {
