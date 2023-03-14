@@ -238,6 +238,44 @@ class AccountController extends Controller
         return $this->goHome();
     }
 
+    public function actionUpdatePassword()
+    {
+        $this->layout = $this->appDir . "/views/authenticated/layouts/main";
+
+        $model = new UserForm();
+        $model->scenario = UserForm::SCENARIO_CHANGE_PASSWORD;
+
+        $userInfo = $this->authComponent->getProfile();
+
+        $model = $this->authComponent->setUserAttributes($model, $userInfo);
+
+        if (Yii::$app->request->isPost) {
+            if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+                $userData = [
+                    "currentPassword" => $model->currentPassword,
+                    "password" => $model->password,
+                    "password2" => $model->password2,
+                ];
+                $response = $this->authComponent->updatePassword($userData);
+                if ($response) {
+                    Yii::$app->session->setFlash("success", \Yii::t('auth', 'Your password has been changed successfully.'));
+                }
+            } else {
+                $errors = [];
+                foreach ($model->errors as $error) {
+                    $errors[] = $error[0];
+                }
+                \Yii::$app->getSession()->setFlash('error', implode(" ", $errors));
+            }
+        }
+
+        return $this->render('profile', [
+            'model' => $model,
+            'tab' => 'password'
+        ]);
+    }
+
     /**
      * Password reset action.
      * @return Response
@@ -388,6 +426,8 @@ class AccountController extends Controller
             return $this->redirect("/auth/account/login");
         }
 
+        $this->layout = $this->appDir . "/views/authenticated/layouts/main";
+
         $model = new UserForm();
         $model->setScenario(UserForm::SCENARIO_ACCOUNT_INFO);
         $userInfo = $this->authComponent->getProfile();
@@ -426,7 +466,8 @@ class AccountController extends Controller
 
         return $this->render('profile', [
             'model' => $model,
-            'formDropdowns' => $this->authComponent->getFormDropdowns()
+            'formDropdowns' => $this->authComponent->getFormDropdowns(),
+            'tab' => 'profile'
         ]);
 
     }
