@@ -71,27 +71,15 @@ class UserForm extends Model
     public function init()
     {
 
-        if (\Yii::$app->language == 'tr') {
-            $this->healthStaffErr = 'Sadece sağlık personelleri içindir';
-            $this->userAgreementErr = 'Lütfen kullanıcı sözleşmesini ve gizlillik politikasını kabul edin';
-            $this->tcNoErr = 'Lütfen, TC kimlik numaranızı yazın';
-            $this->firstNameErr = 'Lütfen adınızı yazın';
-            $this->lastNameErr = 'Lütfen soyadınızı yazın';
-            $this->emailErr1 = 'Lütfen geçerli bir e-posta adresi yazın';
-            $this->emailErr2 = 'Lütfen geçerli bir e-posta adresi yazın!';
-            $this->passwordErr = 'Lütfen 6 karakter ya da daha uzun bir şifre yazın';
-            $this->passwordErr2 = 'Lütfen şifre tekrar alanını doldurun';
-        } else {
-            $this->healthStaffErr = 'For health professionals.';
-            $this->userAgreementErr = '';
-            $this->tcNoErr = '';
-            $this->firstNameErr = '';
-            $this->lastNameErr = '';
-            $this->emailErr1 = '';
-            $this->emailErr2 = '';
-            $this->passwordErr = '';
-            $this->passwordErr2 = '';
-        }
+        $this->healthStaffErr = 'Sadece sağlık personelleri içindir';
+        $this->userAgreementErr = 'Lütfen kullanıcı sözleşmesini ve gizlillik politikasını kabul edin';
+        $this->tcNoErr = 'Lütfen, TC kimlik numaranızı yazın';
+        $this->firstNameErr = 'Lütfen adınızı yazın';
+        $this->lastNameErr = 'Lütfen soyadınızı yazın';
+        $this->emailErr1 = 'Lütfen geçerli bir e-posta adresi yazın';
+        $this->emailErr2 = 'Lütfen geçerli bir e-posta adresi yazın!';
+        $this->passwordErr = 'Lütfen 6 karakter ya da daha uzun bir şifre yazın';
+        $this->passwordErr2 = 'Lütfen şifre tekrar alanını doldurun';
 
     }
 

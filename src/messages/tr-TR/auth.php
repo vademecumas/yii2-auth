@@ -67,6 +67,14 @@ return [
     'Thanks' => 'Teşekkür Ederiz!',
     'Registration key not found or matched!' => 'Kayıt anahtarı bulunamadı yada eşleştirilemedi!',
     'Activation completed successfully' => 'Aktivasyon işlemi başarıyla gerçekleşti',
-    'Your password has been changed successfully.' => 'Şifreniz başarıyla değiştirildi.'
+    'Your password has been changed successfully.' => 'Şifreniz başarıyla değiştirildi.',
+    'For healthcare professionals only' => 'Sadece sağlık personelleri içindir',
+    'Please type a valid e-mail address' => 'Lütfen geçerli bir e-posta adresi yazın',
+    'Please type a password of 6 characters or longer' => 'Lütfen 6 karakter ya da daha uzun bir şifre yazın',
+    'Please fill in the password repeat field' => 'Lütfen şifre tekrar alanını doldurun',
+    'Please write your last name' => 'Lütfen soyadınızı yazın',
+    'Please write your name' => 'Lütfen adınızı yazın',
+    'Please, write down your TR ID number' => 'Lütfen, TC kimlik numaranızı yazın',
+    'Please accept the user agreement and privacy policy' => 'Please accept the user agreement and privacy policy',
 
 ];
