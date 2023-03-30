@@ -27,7 +27,9 @@ class AccountController extends Controller
         $this->layout = 'main';
         $this->authModule = Yii::$app->getModule('auth');
         $this->authComponent = $this->authModule->authApi;
-        $this->agreementComponent = $this->authModule->agreementApi;
+        if ($this->authModule->enableAgreement) {
+            $this->agreementComponent = $this->authModule->agreementApi;
+        }
         $this->appDir = Yii::getAlias('@app');
 
 
