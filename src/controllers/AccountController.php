@@ -383,7 +383,8 @@ class AccountController extends Controller
         }
         $this->verifyUser($response->user->id);
         Yii::$app->session->setFlash("success", \Yii::t('auth', 'Your email address has been verified'));
-        return $this->goHome();
+        return $this->redirect("/auth/account/login");
+
     }
 
 
