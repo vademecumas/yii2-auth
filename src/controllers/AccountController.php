@@ -129,7 +129,7 @@ class AccountController extends Controller
             $createUserData = [
                 "firstName" => $model->firstName,
                 "lastName" => $model->lastName,
-                "occupationId" => (isset($model->occupation) && !empty($model->occupation)) ? $model->occupation : null,
+                "occupationId" => (isset($model->occupation) && !empty($model->occupation)) ? $model->occupation : 1,
                 "areaOfSpecializationId" => (isset($model->areaofspecialization) && !empty($model->areaofspecialization)) ? $model->areaofspecialization : null,
                 "cityId" => (isset($model->city) && !empty($model->city)) ? $model->city : null,
                 "districtId" => (isset($model->district) && !empty($model->district)) ? $model->district : null,
@@ -300,6 +300,7 @@ class AccountController extends Controller
                         'hash' => $response->hash,
                     );
 
+                    Yii::$app->mailer->htmlLayout = "@app/mail/layouts/layout-v2";
                     Yii::$app->mailer->compose([
                         'html' => '@app/mail/passwordResetToken-html',
                         'text' => '@app/mail/passwordResetToken-text'
@@ -480,6 +481,7 @@ class AccountController extends Controller
      */
     function sendVerificationEmail($email, $token)
     {
+        Yii::$app->mailer->htmlLayout = "@app/mail/layouts/layout-v2";
         Yii::$app->mailer->compose([
             'html' => '@app/mail/emailVerify-html',
             'text' => '@app/mail/emailVerify-text'
