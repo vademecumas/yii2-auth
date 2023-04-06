@@ -460,7 +460,7 @@ class AccountController extends Controller
             'html' => '@app/mail/welcome-html',
             'text' => '@app/mail/welcome-text'
         ], [])
-            ->setTo($model->email)
+            ->setTo($response->user->email)
             ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
             ->setSubject(Yii::$app->name . ' - ' . \Yii::t('auth', 'Welcome'))
             ->send();
