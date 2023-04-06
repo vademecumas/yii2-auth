@@ -4,7 +4,7 @@ namespace vademecumas\auth\components;
 
 use Yii;
 use yii\base\Module;
-use yii\helpers\Url;
+use yii\helpers\Html;
 
 class AccessControl extends \yii\base\ActionFilter
 {
@@ -21,6 +21,7 @@ class AccessControl extends \yii\base\ActionFilter
 
     public function beforeAction($action)
     {
+
         $urlParts = parse_url(Yii::$app->request->url);
 
         if (Yii::$app->user->isGuest) {
@@ -41,10 +42,19 @@ class AccessControl extends \yii\base\ActionFilter
             //check is logged in from another device or is account expired
             $authComponent = Yii::$app->getModule('auth')->authApi;
             $userStatus = $authComponent->accountStatus();
-            if (!$userStatus || !$userStatus->accountStatus) {
-                Yii::$app->user->logout();
-                Yii::$app->user->loginRequired();
-                return false;
+            if (!$userStatus || !$userStatus->accountStatus->status) {
+                if ($userStatus->accountStatus->code == 6) {
+                    $verificationMessage = Html::a(\Yii::t('auth', 'Resend'), ['auth/account/resend-verification-email']);
+                    \Yii::$app->getSession()->setFlash('warning', sprintf(\Yii::t('auth', 'Please check the account verification e-mail sent to your e-mail address.Need new verification email? %s'), $verificationMessage));
+                }
+
+// TODO : remove here later
+//                else {
+//                    Yii::$app->user->logout();
+//                    \Yii::$app->getSession()->setFlash('warning', \Yii::t('auth', $userStatus->accountStatus->description));
+//                    Yii::$app->user->loginRequired();
+//                    return false;
+//                }
             }
 
 

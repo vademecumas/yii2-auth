@@ -3,6 +3,10 @@
 namespace vademecumas\auth\controllers;
 
 use frontend\models\search\UserInboxSearch;
+use vademecumas\auth\Auth;
+use vademecumas\auth\models\AgreementApiInterface;
+use vademecumas\auth\models\AuthApiInterface;
+use vademecumas\auth\models\CreditCardForm;
 use vademecumas\auth\models\User;
 use vademecumas\auth\models\UserForm;
 use Yii;
@@ -14,9 +18,25 @@ use yii\web\Response;
  */
 class AccountController extends Controller
 {
+
+    /**
+     * @var AuthApiInterface
+     */
     protected $authComponent;
+
+    /**
+     * @var AgreementApiInterface
+     */
     protected $agreementComponent;
+
+    /**
+     * @var Auth
+     */
     protected $authModule;
+
+    /**
+     * @var string
+     */
     protected $appDir;
 
 
@@ -61,9 +81,6 @@ class AccountController extends Controller
                 if ($loginResponse) {
 
                     $user = User::findOne(['id' => $loginResponse->user->id]);
-                    if ($this->authModule->shouldVerifyEmail && $user != null && $user->status == User::STATUS_INACTIVE) {
-                        \Yii::$app->getSession()->setFlash('error', \Yii::t('auth', 'Please check the account verification e-mail sent to your e-mail address.'));
-                    }
 
                     if ($user = $this->saveUser($loginResponse, $user, false)) {
 
@@ -112,20 +129,56 @@ class AccountController extends Controller
      * Signs user up.
      * @return mixed
      */
-    public function actionRegister()
+    public function actionRegister($package = '')
     {
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
         $model = new UserForm();
-        $model->setScenario(UserForm::SCENARIO_SIGNUP);
+        $model->setScenario(UserForm::SCENARIO_SIGNUP_WITH_PHONE);
         $model->userAgreement = 1;
         $model->healthStaff = 1;
 
-        if (Yii::$app->request->isPost) {
+        $creditCardModel = new CreditCardForm();
+        $creditCardModel->package = $package;
 
-            $model->load(Yii::$app->request->post());
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) && $model->validate()) {
+
+            if ($this->authModule->registrationType == Auth::REGISTRATION_TYPE_WITH_SUBSCRIPTION && $model->step == UserForm::STEP_REGISTER) {
+
+                return $this->render('subscribe', [
+                    'model' => $model,
+                    'creditCardModel' => $creditCardModel,
+                    'formDropdowns' => $this->authComponent->getFormDropdowns(),
+                    'package' => $package,
+                    'packageList' => $this->authComponent->packageList
+
+                ]);
+            }
+
+            $creditCardData = [];
+            if ($this->authModule->registrationType == Auth::REGISTRATION_TYPE_WITH_SUBSCRIPTION && $model->step == UserForm::STEP_SUBSCRIBE) {
+                if ($creditCardModel->load(Yii::$app->request->post()) && $creditCardModel->validate()) {
+                    $creditCardData = [
+                        "cardNumber" => str_replace(" ", "", $creditCardModel->cardNumber),
+                        "expirationDate" => $creditCardModel->expirationDate,
+                        "cardHolderName" => $creditCardModel->cardHolderName
+                    ];
+                } else {
+                    return $this->render('subscribe', [
+                        'model' => $model,
+                        'creditCardModel' => $creditCardModel,
+                        'formDropdowns' => $this->authComponent->getFormDropdowns(),
+                        'package' => $package,
+                        'packageList' => $this->authComponent->packageList
+
+                    ]);
+                }
+            }
+
+
             $createUserData = [
                 "firstName" => $model->firstName,
                 "lastName" => $model->lastName,
@@ -135,14 +188,13 @@ class AccountController extends Controller
                 "districtId" => (isset($model->district) && !empty($model->district)) ? $model->district : null,
                 "address" => (isset($model->address) && !empty($model->address)) ? $model->address : null,
                 "tcNo" => (isset($model->tcNo) && !empty($model->tcNo)) ? $model->tcNo : null,
-                "dateOfBirth" => (isset($model->birthday) && !empty($model->birthday)) ? $model->birthday : null,
                 "billingAddress" => (isset($model->billingAddress) && !empty($model->billingAddress)) ? $model->billingAddress : null,
                 "billingCityId" => (isset($model->billingCity) && !empty($model->billingCity)) ? $model->billingCity : null,
                 "billingDistrictId" => (isset($model->billingDistrict) && !empty($model->billingDistrict)) ? $model->billingDistrict : null,
                 "companyName" => (isset($model->companyName) && !empty($model->companyName)) ? $model->companyName : null,
                 "taxNo" => (isset($model->taxNo) && !empty($model->taxNo)) ? $model->taxNo : null,
                 "taxOffice" => (isset($model->taxOffice) && !empty($model->taxOffice)) ? $model->taxOffice : null,
-                "phone" => (isset($model->phone) && !empty($model->phone)) ? $model->phone : null,
+                "phone" => (isset($model->phone) && !empty($model->phone)) ? str_replace(' ', '', $model->phone) : null,
                 'identifier' => (isset($model->gln) && !empty($model->gln)) ? $model->gln : null,
                 'branch' => (isset($model->warehouse_branch) && !empty($model->warehouse_branch)) ? $model->warehouse_branch : null,
             ];
@@ -150,8 +202,8 @@ class AccountController extends Controller
             $userData = [
                 "email" => $model->email,
                 "password" => $model->password,
-                "birthday" => $model->birthday,
                 "userData" => $createUserData,
+                "creditCardData" => $creditCardData,
                 "appIds" => $this->authComponent->appIds,
                 "shouldVerifyEmail" => $this->authModule->shouldVerifyEmail ? 1 : 0
             ];
@@ -160,8 +212,29 @@ class AccountController extends Controller
             $createResponse = $this->authComponent->signup($userData);
 
             if (!empty($this->authComponent->errors)) {
-                if (!empty($this->authComponent->errors->form_errors->email)) {
-                    \Yii::$app->getSession()->setFlash('error', \Yii::t('auth', 'The e-mail address has already been registered.'));
+                if (!empty($this->authComponent->errors->form_errors)) {
+                    if (!empty($this->authComponent->errors->form_errors->email)) {
+                        \Yii::$app->getSession()->setFlash('error', \Yii::t('auth', 'The e-mail address has already been registered.'));
+                    }
+                    if (!empty($this->authComponent->errors->form_errors->phone)) {
+                        \Yii::$app->getSession()->setFlash('error', \Yii::t('auth', 'Invalid Phone Number'));
+                    }
+
+                    if (!empty($this->authComponent->errors->form_errors->_general_errors)) {
+                        $errorMessage = $this->authComponent->errors->form_errors->_general_errors[0];
+                        \Yii::$app->getSession()->setFlash('error', \Yii::t('auth', $errorMessage));
+                        if ($errorMessage == 'Please check your card information') {
+                            return $this->render('subscribe', [
+                                'model' => $model,
+                                'creditCardModel' => $creditCardModel,
+                                'formDropdowns' => $this->authComponent->getFormDropdowns(),
+                                'package' => $package,
+                                'packageList' => $this->authComponent->packageList
+
+                            ]);
+                        }
+                    }
+
                     return $this->render('register', [
                         'model' => $model,
                         'formDropdowns' => $this->authComponent->getFormDropdowns()
@@ -199,22 +272,18 @@ class AccountController extends Controller
                     //send verification email
                     if ($this->authModule->shouldVerifyEmail) {
                         $this->sendVerificationEmail($model->email, $createResponse->user->emailConfirmationToken);
-                        Yii::$app->session->setFlash("error", \Yii::t('auth', 'Please check the account verification e-mail sent to your e-mail address.'));
-
-                    } else {
-                        //login registered user
-                        Yii::$app->user->login($user, 3600 * 24 * 360);
-                        Yii::$app->session->set("userData", $userInfo);
-                        $cookies = Yii::$app->response->cookies;
-                        $cookies->add(new \yii\web\Cookie([
-                            'name' => 'authToken',
-                            'value' => $loginResponse->user->authToken,
-                            'expire' => time() + 86400 * 365,
-                        ]));
-                        return $this->goHome();
                     }
 
-                    return $this->redirect("/auth/account/login");
+                    //login registered user
+                    Yii::$app->user->login($user, 3600 * 24 * 360);
+                    Yii::$app->session->set("userData", $userInfo);
+                    $cookies = Yii::$app->response->cookies;
+                    $cookies->add(new \yii\web\Cookie([
+                        'name' => 'authToken',
+                        'value' => $loginResponse->user->authToken,
+                        'expire' => time() + 86400 * 365,
+                    ]));
+                    return $this->goHome();
 
                 }
             }
@@ -382,6 +451,12 @@ class AccountController extends Controller
             return $this->redirect("/auth/account/resend-verification-email");
         }
         $this->verifyUser($response->user->id);
+
+        if (!Yii::$app->user->isGuest) {
+            Yii::$app->user->logout();
+        }
+        Yii::$app->session->removeAll();
+
         Yii::$app->session->setFlash("success", \Yii::t('auth', 'Your email address has been verified'));
         return $this->redirect("/auth/account/login");
 
@@ -523,7 +598,7 @@ class AccountController extends Controller
 
             $status = User::STATUS_ACTIVE;
             if ($isRegisterAction && $this->authModule->shouldVerifyEmail) {
-                $status = User::STATUS_INACTIVE;
+                $status = User::STATUS_ACTIVE;
             }
 
             $user = new User();

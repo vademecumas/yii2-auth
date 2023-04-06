@@ -6,7 +6,8 @@ return [
             'class' => 'vademecumas\auth\components\AuthApi',
             'apiUrl' => '',
             'appToken' => '',
-            'appIds' => ''
+            'appIds' => '',
+            'packageList' => []
         ],
         'agreementApi' => [
             'class' => 'common\components\AgreementApi',

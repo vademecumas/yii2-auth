@@ -15,7 +15,7 @@ return [
     'Remember Me' => 'Beni Hatırla',
     'Invalid or wrong email address or password!' => 'Geçersiz ya da hatalı e-posta adresi ya da şifre!',
     'The e-mail address has already been registered.' => 'E-posta adresi daha önce kaydedilmiş.',
-    'Please check the account verification e-mail sent to your e-mail address.' => 'Lütfen mail adresinize gönderilen hesap doğrulama mailini kontrol ediniz.',
+    'Please check the account verification e-mail sent to your e-mail address.Need new verification email? %s' => 'Lütfen mail adresinize gönderilen hesap doğrulama mailini kontrol ediniz.Doğrulama maili size ulaşmadı mı? %s',
     'Your password has been sent to your registered e-mail address.' => 'Şifreniz kayıtlı e-posta adresinize gönderilmiştir.',
     'No registered e-mail address found' => 'Kayıtlı e-posta adresi bulunamamıştır',
     'Your password has been updated. You can login with your new password' => 'Şifreniz güncellenmiştir. Yeni şifrenizle giriş yapabilirsiniz',
@@ -76,5 +76,12 @@ return [
     'Please write your name' => 'Lütfen adınızı yazın',
     'Please, write down your TR ID number' => 'Lütfen, TC kimlik numaranızı yazın',
     'Please accept the user agreement and privacy policy' => 'Please accept the user agreement and privacy policy',
+    'Invalid Phone Number' => 'Geçersiz telefon numarası',
+    'Package' => 'Paket',
+    'Card Number' => 'Kart Numarası',
+    'Expiration Date' => 'Son Kullanım Tarihi',
+    'Cvv' => 'Cvv',
+    'Card Holder Name' => 'Kart Sahibinin Adı Soyadı',
+
 
 ];
