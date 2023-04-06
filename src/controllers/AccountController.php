@@ -444,13 +444,27 @@ class AccountController extends Controller
             return $this->redirect("/auth/account/resend-verification-email");
         }
 
+        //verify user on auth module
         $response = $this->authComponent->confirmEmail($token);
-
         if (!$response) {
             Yii::$app->session->setFlash("error", \Yii::t('auth', 'We encountered an error while verifying your e-mail address. Try sending an e-mail verification e-mail again.'));
             return $this->redirect("/auth/account/resend-verification-email");
         }
+
+        //verify user on project
         $this->verifyUser($response->user->id);
+
+        //send welcome mail
+        Yii::$app->mailer->htmlLayout = "@app/mail/layouts/layout-v2";
+        Yii::$app->mailer->compose([
+            'html' => '@app/mail/welcome-html',
+            'text' => '@app/mail/welcome-text'
+        ], [])
+            ->setTo($model->email)
+            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name])
+            ->setSubject(Yii::$app->name . ' - ' . \Yii::t('auth', 'Welcome'))
+            ->send();
+
 
         if (!Yii::$app->user->isGuest) {
             Yii::$app->user->logout();
