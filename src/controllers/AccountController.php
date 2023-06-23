@@ -80,7 +80,7 @@ class AccountController extends Controller
 
                 if ($loginResponse) {
 
-                    $user = User::findOne(['id' => $loginResponse->user->id]);
+                    $user = User::findOne(['auth_api_id' => $loginResponse->user->id]);
 
                     if ($user = $this->saveUser($loginResponse, $user, false)) {
 
@@ -266,7 +266,7 @@ class AccountController extends Controller
 
                         //approve agreement
                         $ip = Yii::$app->request->getUserIP();
-                        $this->agreementComponent->approve($aggrement['id'], $user->id, $ip, 1);
+                        $this->agreementComponent->approve($aggrement['id'], $user->auth_api_id, $ip, 1);
                     }
 
                     //send verification email
@@ -597,7 +597,7 @@ class AccountController extends Controller
 
     public function verifyUser($id)
     {
-        $user = User::findOne(['id' => $id]);
+        $user = User::findOne(['auth_api_id' => $id]);
         $user->status = User::STATUS_ACTIVE;
         $user->save();
     }
@@ -620,7 +620,7 @@ class AccountController extends Controller
 
         }
 
-        $user->id = $response->user->id;
+        $user->auth_api_id = $response->user->id;
         $user->username = $response->user->email;
         $user->email = $response->user->email;
         $user->auth_key = $response->user->authToken;
