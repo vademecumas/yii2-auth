@@ -66,7 +66,7 @@ class UserForm extends Model
         $scenarios[self::SCENARIO_RESET_PASSWORD] = ['password', 'password2'];
 
         $scenarios[self::SCENARIO_ACCOUNT_INFO] = ['firstName', 'lastName', 'occupation',
-            'phone', 'address', 'city', 'district', 'tcNo', 'birthday', 'avatar', 'discount_rate'];
+            'phone', 'address', 'city', 'district', 'tcNo', 'birthday', 'avatar'];
 
         $scenarios[self::SCENARIO_REQUEST_RESET_PASSWORD] = ['email'];
 
@@ -98,8 +98,7 @@ class UserForm extends Model
 
             [['firstName', 'lastName', 'email', 'password2', 'password', 'currentPassword', 'occupation', 'phone', 'healthStaff', 'userAgreement', 'billingCity', 'billingDistrict', 'billingAddress', 'companyName', 'taxNo', 'taxOffice', 'districtist'], 'required'],
             [['firstName', 'lastName', 'email', 'phone'], 'trim'],
-            [['city', 'district', 'step', 'tcNo'], 'safe'],
-            ['discount_rate', 'number']
+            [['city', 'district', 'step', 'tcNo'], 'safe']
 
         ];
 
