@@ -39,6 +39,7 @@ class UserForm extends Model
 
     const SCENARIO_SIGNUP = 'signup';
     const SCENARIO_SIGNUP_WITH_PHONE = 'signup-with-phone';
+    const SCENARIO_SIGNUP_WITHOUT_PHONE = 'signup-without-phone';
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_ACCOUNT_INFO = 'accountInfo';
     const SCENARIO_CHANGE_PASSWORD = 'changePassword';
@@ -60,6 +61,9 @@ class UserForm extends Model
             'userAgreement', 'healthStaff', 'areaofspecialization'];
 
         $scenarios[self::SCENARIO_SIGNUP_WITH_PHONE] = ['firstName', 'lastName', 'email', 'phone', 'password', 'step'];
+
+        $scenarios[self::SCENARIO_SIGNUP_WITHOUT_PHONE] = ['firstName', 'lastName', 'email', 'password', 'password2'];
+
 
         $scenarios[self::SCENARIO_CHANGE_PASSWORD] = ['password', 'password2', "currentPassword"];
 

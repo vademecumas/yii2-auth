@@ -137,7 +137,7 @@ class AccountController extends Controller
         }
 
         $model = new UserForm();
-        $model->setScenario(UserForm::SCENARIO_SIGNUP_WITH_PHONE);
+        $model->setScenario(UserForm::SCENARIO_SIGNUP_WITHOUT_PHONE);
         $model->userAgreement = 1;
         $model->healthStaff = 1;
 
