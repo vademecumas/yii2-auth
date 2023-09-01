@@ -21,6 +21,7 @@ class AccessControl extends \yii\base\ActionFilter
 
     public function beforeAction($action)
     {
+        Yii::$app->params['isSubscribed'] = false;
 
         $urlParts = parse_url(Yii::$app->request->url);
 
@@ -47,16 +48,9 @@ class AccessControl extends \yii\base\ActionFilter
                     $verificationMessage = Html::a(\Yii::t('auth', 'Resend'), ['auth/account/resend-verification-email']);
                     \Yii::$app->getSession()->setFlash('warning', sprintf(\Yii::t('auth', 'Please check the account verification e-mail sent to your e-mail address.Need new verification email? %s'), $verificationMessage));
                 }
-
-// TODO : remove here later
-//                else {
-//                    Yii::$app->user->logout();
-//                    \Yii::$app->getSession()->setFlash('warning', \Yii::t('auth', $userStatus->accountStatus->description));
-//                    Yii::$app->user->loginRequired();
-//                    return false;
-//                }
+            } else {
+                Yii::$app->params['isSubscribed'] = true;
             }
-
 
             if ($this->shouldSubscribe) {
                 if (((empty($userStatus->key) || $userStatus->key->endsAt < time())) && !in_array($urlParts['path'], $this->subscriptionExcludedUrls)) {

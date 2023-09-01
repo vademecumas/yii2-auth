@@ -180,6 +180,9 @@ class LandingController extends Controller
             $paymentType = self::CREDIT_CARD_PAYMENT;
 
             $keys = $this->generateKeys($order);
+            foreach ($keys as $key) {
+                $this->authComponent->activateUser($key);
+            }
             if (!$keys) {
                 return $this->render(
                     "result/error",
@@ -304,12 +307,12 @@ class LandingController extends Controller
         }
 
         if ($order->payment_type == self::CASH_PAYMENT) {
-            $html = "landing/order-cash-confirmation-html.php";
-            $text = "landing/order-cash-confirmation-text.php";
+            $html = "@app/mail/landing/order-cash-confirmation-html.php";
+            $text = "@app/mail/landing/order-cash-confirmation-text.php";
 
         } else if ($order->payment_type == self::CREDIT_CARD_PAYMENT) {
-            $html = "landing/order-creditcard-confirmation-html.php";
-            $text = "landing/order-creditcard-confirmation-text.php";
+            $html = "@app/mail/landing/order-creditcard-confirmation-html.php";
+            $text = "@app/mail/landing/order-creditcard-confirmation-text.php";
         }
 
         $mailParams = array(
@@ -322,7 +325,7 @@ class LandingController extends Controller
             'productDetails' => sprintf("%d adet %s: %s TRY", $vdmcIdOrder->packageAmount, $vdmcIdOrder->packageInfo->name, $vdmcIdOrder->totalPrice),
         );
 
-        Yii::$app->mailer->htmlLayout = "layouts/layout-v2";
+        Yii::$app->mailer->htmlLayout = "@app/mail/layouts/layout-v2";
 
         Yii::$app->mailer->compose(
             [
