@@ -4,6 +4,7 @@ namespace vademecumas\auth\controllers;
 
 use frontend\models\search\UserInboxSearch;
 use vademecumas\auth\Auth;
+use vademecumas\auth\behaviors\LanguageSwitchBehavior;
 use vademecumas\auth\models\AgreementApiInterface;
 use vademecumas\auth\models\AuthApiInterface;
 use vademecumas\auth\models\CreditCardForm;
@@ -56,6 +57,15 @@ class AccountController extends Controller
         Yii::$app->setLayoutPath("/");
         $this->setViewPath($this->appDir . "/views/auth/account");
         $this->layout = $this->appDir . "/views/auth/layouts/main";
+    }
+
+    public function behaviors()
+    {
+        return [
+            'languageSwitch' => [
+                'class' => LanguageSwitchBehavior::class,
+            ]
+        ];
     }
 
     /**

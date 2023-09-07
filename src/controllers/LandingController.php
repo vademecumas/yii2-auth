@@ -6,6 +6,7 @@ use common\models\orm\Orders;
 use common\models\orm\OrdersKeys;
 use console\jobs\CallRpiJob;
 use frontend\models\search\UserInboxSearch;
+use vademecumas\auth\behaviors\LanguageSwitchBehavior;
 use vademecumas\auth\models\ActivationForm;
 use vademecumas\auth\models\Order;
 use vademecumas\auth\models\SubscriptionForm;
@@ -39,6 +40,15 @@ class LandingController extends Controller
         Yii::$app->setLayoutPath("/");
         $this->setViewPath($this->appDir . "/views/auth/landing");
         $this->layout = $this->appDir . "/views/auth/layouts/main";
+    }
+
+    public function behaviors()
+    {
+        return [
+            'languageSwitch' => [
+                'class' => LanguageSwitchBehavior::class,
+            ]
+        ];
     }
 
     /**
