@@ -93,10 +93,8 @@ class LandingController extends Controller
         $subscriptionForm = new SubscriptionForm();
 
         $request = Yii::$app->request;
-        if ($request->isPost) {
-            $subscriptionForm->load($request->post());
+        if ($subscriptionForm->load($request->post()) || $subscriptionForm->load($request->get())) {
             if ($subscriptionForm->validate()) {
-
 
                 $order = $this->authComponent->createOrder(
                     $subscriptionForm->packageId,
