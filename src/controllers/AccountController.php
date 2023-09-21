@@ -141,6 +141,10 @@ class AccountController extends Controller
      */
     public function actionRegister($package = '')
     {
+        $agreement = null;
+        if ($this->authModule->enableAgreement) {
+            $agreement = $this->agreementComponent->activeAgreement();
+        }
 
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -299,9 +303,9 @@ class AccountController extends Controller
             }
         }
 
-
         return $this->render('register', [
             'model' => $model,
+            'agreement' => $agreement,
             'formDropdowns' => $this->authComponent->getFormDropdowns()
         ]);
 
