@@ -36,6 +36,7 @@ class UserForm extends Model
     public $districtist;
     public $avatar;
     public $step;
+    public $birthday;
 
     const SCENARIO_SIGNUP = 'signup';
     const SCENARIO_SIGNUP_WITH_PHONE = 'signup-with-phone';
