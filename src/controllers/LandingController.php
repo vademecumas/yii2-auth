@@ -106,7 +106,7 @@ class LandingController extends Controller
 
                 if ($order) {
                     $orderIdentifier = $order->identifierHash;
-                    return $this->redirect($this->authComponent->apiUrl . "/payment/payment?order=" . $orderIdentifier);
+                    return $this->redirect( str_replace('.internal', '', $this->authComponent->apiUrl). "/payment/payment?order=" . $orderIdentifier);
                 } else {
                     Yii::error("An error occurred when creating the order: " . print_r($this->authComponent->errors, true));
                     $subscriptionForm->addError("packageId", "Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz");
