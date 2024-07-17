@@ -26,7 +26,7 @@ You can find samle api responses below.
 - [ ] User Agreement
 - [ ] User Roles and Permissions
 - [ ] Social Authentication
-- [ ] Captcha Protection
+- [x] Captcha Protection
 
 ### Installation
 
