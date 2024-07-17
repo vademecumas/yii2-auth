@@ -37,10 +37,14 @@ class UserForm extends Model
     public $avatar;
     public $step;
     public $birthday;
+    public $reCaptcha;
+    private $reCaptchaSecret;
+
 
     const SCENARIO_SIGNUP = 'signup';
     const SCENARIO_SIGNUP_WITH_PHONE = 'signup-with-phone';
     const SCENARIO_SIGNUP_WITHOUT_PHONE = 'signup-without-phone';
+    const SCENARIO_SIGNUP_WITHOUT_PHONE_AND_ENABLE_CAPTCHA = 'signup-without-phone-and-enable-captcha';
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_ACCOUNT_INFO = 'accountInfo';
     const SCENARIO_CHANGE_PASSWORD = 'changePassword';
@@ -50,6 +54,11 @@ class UserForm extends Model
 
     const STEP_REGISTER = 1;
     const STEP_SUBSCRIBE = 2;
+
+    public function __construct($reCaptchaSecret = "")
+    {
+        $this->reCaptchaSecret = $reCaptchaSecret;
+    }
 
 
     public function scenarios()
@@ -65,6 +74,7 @@ class UserForm extends Model
 
         $scenarios[self::SCENARIO_SIGNUP_WITHOUT_PHONE] = ['firstName', 'lastName', 'email', 'password', 'password2'];
 
+        $scenarios[self::SCENARIO_SIGNUP_WITHOUT_PHONE_AND_ENABLE_CAPTCHA] = ['firstName', 'lastName', 'email', 'password', 'password2', 'reCaptcha'];
 
         $scenarios[self::SCENARIO_CHANGE_PASSWORD] = ['password', 'password2', "currentPassword"];
 
@@ -103,9 +113,12 @@ class UserForm extends Model
 
             [['firstName', 'lastName', 'email', 'password2', 'password', 'currentPassword', 'occupation', 'phone', 'healthStaff', 'userAgreement', 'billingCity', 'billingDistrict', 'billingAddress', 'companyName', 'taxNo', 'taxOffice', 'districtist'], 'required'],
             [['firstName', 'lastName', 'email', 'phone'], 'trim'],
-            [['city', 'district', 'step', 'tcNo'], 'safe']
-
+            [['city', 'district', 'step', 'tcNo'], 'safe'],
         ];
+
+        if ($this->reCaptchaSecret) {
+            $rules[] = ['reCaptcha', \himiklab\yii2\recaptcha\ReCaptchaValidator::className(), 'secret' => $this->reCaptchaSecret, 'uncheckedMessage' => 'Lütfen bot olmadığınızı doğrulayın.'];
+        }
 
         return $rules;
     }
@@ -153,6 +166,7 @@ class UserForm extends Model
             'city' => 'İşyeri İl',
             'district' => 'İşyeri İlçe',
             'areaofspecialization' => 'Uzmanlık Alanı',
+            'reCaptcha' => 'Güvenlik Kontrolü',
 
         ];
     }
