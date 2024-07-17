@@ -154,7 +154,7 @@ class AccountController extends Controller
         $scenario = UserForm::SCENARIO_SIGNUP_WITHOUT_PHONE;
 
         if (Yii::$app->params['enableCaptcha']) {
-            $model = new UserForm(Yii::$app->params['reCaptchaSecret']);
+            $model = new UserForm(['reCaptchaSecret'=>Yii::$app->params['reCaptchaSecret']]);
             $scenario = UserForm::SCENARIO_SIGNUP_WITHOUT_PHONE_AND_ENABLE_CAPTCHA;
         }
         $model->setScenario($scenario);
