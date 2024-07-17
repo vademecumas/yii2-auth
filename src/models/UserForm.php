@@ -38,7 +38,7 @@ class UserForm extends Model
     public $step;
     public $birthday;
     public $reCaptcha;
-    private $reCaptchaSecret;
+    public $reCaptchaSecret;
 
 
     const SCENARIO_SIGNUP = 'signup';
@@ -54,12 +54,6 @@ class UserForm extends Model
 
     const STEP_REGISTER = 1;
     const STEP_SUBSCRIBE = 2;
-
-    public function __construct($reCaptchaSecret = "")
-    {
-        $this->reCaptchaSecret = $reCaptchaSecret;
-    }
-
 
     public function scenarios()
     {
