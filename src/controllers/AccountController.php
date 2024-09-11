@@ -217,6 +217,9 @@ class AccountController extends Controller
                 "phone" => (isset($model->phone) && !empty($model->phone)) ? str_replace(' ', '', $model->phone) : null,
                 'identifier' => (isset($model->gln) && !empty($model->gln)) ? $model->gln : null,
                 'branch' => (isset($model->warehouse_branch) && !empty($model->warehouse_branch)) ? $model->warehouse_branch : null,
+                "protocolNo" => (isset($model->protocolNo) && !empty($model->protocolNo)) ? $model->protocolNo : null,
+                "diplomaRegistrationNumber" => (isset($model->diplomaRegistrationNumber) && !empty($model->diplomaRegistrationNumber)) ? $model->diplomaRegistrationNumber : null,
+                "facilityCode" => (isset($model->facilityCode) && !empty($model->facilityCode)) ? $model->facilityCode : null,
             ];
 
             $userData = [
@@ -546,6 +549,7 @@ class AccountController extends Controller
         $userInfo = $this->authComponent->getProfile();
 
         $model = $this->authComponent->setUserAttributes($model, $userInfo);
+
 
 
         if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {

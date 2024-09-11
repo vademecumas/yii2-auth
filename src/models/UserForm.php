@@ -39,6 +39,9 @@ class UserForm extends Model
     public $birthday;
     public $reCaptcha;
     public $reCaptchaSecret;
+    public $protocolNo;
+    public $diplomaRegistrationNumber;
+    public $facilityCode;
 
 
     const SCENARIO_SIGNUP = 'signup';
@@ -75,7 +78,7 @@ class UserForm extends Model
         $scenarios[self::SCENARIO_RESET_PASSWORD] = ['password', 'password2'];
 
         $scenarios[self::SCENARIO_ACCOUNT_INFO] = ['firstName', 'lastName', 'occupation',
-            'phone', 'address', 'city', 'district', 'tcNo', 'birthday', 'avatar'];
+            'phone', 'address', 'city', 'district', 'tcNo', 'birthday', 'avatar', 'protocolNo', 'diplomaRegistrationNumber', 'facilityCode'];
 
         $scenarios[self::SCENARIO_REQUEST_RESET_PASSWORD] = ['email'];
 
@@ -107,7 +110,7 @@ class UserForm extends Model
 
             [['firstName', 'lastName', 'email', 'password2', 'password', 'currentPassword', 'occupation', 'phone', 'healthStaff', 'userAgreement', 'billingCity', 'billingDistrict', 'billingAddress', 'companyName', 'taxNo', 'taxOffice', 'districtist'], 'required'],
             [['firstName', 'lastName', 'email', 'phone'], 'trim'],
-            [['city', 'district', 'step', 'tcNo'], 'safe'],
+            [['city', 'district', 'step', 'tcNo', 'protocolNo', 'diplomaRegistrationNumber', 'facilityCode'], 'safe'],
         ];
 
         if ($this->reCaptchaSecret) {
@@ -161,6 +164,9 @@ class UserForm extends Model
             'district' => 'İşyeri İlçe',
             'areaofspecialization' => 'Uzmanlık Alanı',
             'reCaptcha' => 'Güvenlik Kontrolü',
+            'protocolNo' => 'Protocol No',
+            'diplomaRegistrationNumber' => 'Diploma Registration Number',
+            'facilityCode' => 'Facility Code',
 
         ];
     }
